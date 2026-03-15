@@ -3,94 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sabiduría Diaria v3 - Nico</title>
+    <title>Sabiduría Diaria | Nico</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,700;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Crimson+Pro:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #f8fafc; --card: #ffffff; --text: #1e293b; }
-        @media (prefers-color-scheme: dark) {
-            :root { --bg: #0f172a; --card: #1e293b; --text: #f1f5f9; }
+        :root {
+            --bg-color: #fdfcf9;
+            --card-color: #ffffff;
+            --accent: #d97706; 
         }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg); color: var(--text); min-height: 100vh; transition: all 0.3s ease; }
-        .serif { font-family: 'Playfair Display', serif; }
-        .glass { background: var(--card); border: 1px solid rgba(148, 163, 184, 0.1); shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); }
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --bg-color: #0f172a;
+                --card-color: #1e293b;
+                --accent: #fbbf24;
+            }
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            transition: background-color 0.5s ease;
+        }
+        .serif {
+            font-family: 'Crimson Pro', serif;
+        }
+        .quote-card {
+            box-shadow: 0 25px 50px -12px rgba(217, 119, 6, 0.1);
+        }
+        .version-tag {
+            font-size: 0.65rem;
+            letter-spacing: 0.15em;
+            font-weight: 900;
+        }
     </style>
 </head>
-<body class="p-4 md:p-8 flex flex-col items-center">
+<body class="min-h-screen flex flex-col items-center p-4 md:p-8 text-slate-800 dark:text-slate-100">
 
-    <div class="max-w-4xl w-full space-y-8">
-        <div class="text-center">
-            <p id="fecha-actual" class="text-amber-500 font-bold tracking-widest text-xs uppercase mb-2"></p>
-            <h1 class="text-4xl font-bold tracking-tight">Sabiduría para hoy 🙌</h1>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div class="glass rounded-3xl p-8 space-y-4">
-                <span class="text-[10px] font-bold opacity-50 uppercase tracking-widest">RVR 1960</span>
-                <p id="texto-rvr" class="serif text-xl italic leading-relaxed"></p>
-                <p id="cita-rvr" class="text-sm font-bold opacity-40"></p>
+    <div class="max-w-2xl w-full space-y-6">
+        <!-- Header -->
+        <header class="flex justify-between items-center py-4 px-2">
+            <div>
+                <h1 class="text-2xl font-black tracking-tighter uppercase text-slate-900 dark:text-white">Proverbios <span class="text-amber-500 italic">365</span></h1>
+                <p id="current-date" class="text-[10px] font-bold opacity-50 uppercase tracking-[0.2em] mt-1"></p>
             </div>
-            <div class="glass rounded-3xl p-8 space-y-4 border-l-4 border-l-amber-400">
-                <span class="text-[10px] font-bold opacity-50 uppercase tracking-widest text-amber-500">NTV</span>
-                <p id="texto-ntv" class="serif text-xl italic leading-relaxed"></p>
-                <p id="cita-ntv" class="text-sm font-bold opacity-40"></p>
-            </div>
-        </div>
-
-        <div class="glass rounded-3xl p-8 space-y-4">
-            <h3 class="font-semibold flex items-center gap-2">
-                <span>📝</span> Mi reflexión de hoy:
-            </h3>
-            <textarea id="reflexion-user" 
-                class="w-full bg-transparent border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-xl p-4 focus:border-amber-400 focus:outline-none transition-colors"
-                rows="3" placeholder="¿Cómo aplicarás esto hoy, Nico?"></textarea>
-            <p class="text-[10px] opacity-50 text-right">Se guarda automáticamente en tu navegador ✨</p>
-        </div>
-
-        <div class="flex justify-center gap-4">
-            <button id="copyBtn" class="bg-slate-800 text-white px-6 py-3 rounded-2xl hover:bg-black transition-all active:scale-95 text-sm font-medium">
-                Copiar Versículos
+            <button onclick="refreshVerse()" class="p-3 bg-white dark:bg-slate-800 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 hover:rotate-180 transition-all duration-500 active:scale-90" title="Nuevo versículo">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-amber-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
             </button>
-        </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="bg-white dark:bg-slate-900 rounded-[2.5rem] p-8 md:p-12 quote-card border border-slate-100 dark:border-slate-800 relative overflow-hidden transition-all duration-500">
+            <div class="relative z-10 space-y-10">
+                
+                <!-- Cita -->
+                <div id="verse-citation" class="text-3xl md:text-4xl font-black tracking-tighter text-slate-900 dark:text-white border-b-2 border-amber-500/10 pb-4 inline-block">
+                    Cargando...
+                </div>
+
+                <!-- Versiones -->
+                <div class="space-y-12">
+                    <!-- NTV -->
+                    <div class="space-y-3">
+                        <div class="flex items-center gap-2">
+                            <span class="version-tag text-amber-600 bg-amber-50 dark:bg-amber-900/20 px-2 py-0.5 rounded">NTV</span>
+                            <span class="text-[9px] opacity-30 uppercase font-bold">Nueva Traducción Viviente</span>
+                        </div>
+                        <p id="verse-ntv" class="serif text-2xl md:text-3xl italic leading-snug text-slate-800 dark:text-slate-100">
+                            ...
+                        </p>
+                    </div>
+                    
+                    <!-- RVR60 -->
+                    <div class="space-y-3 opacity-80">
+                        <div class="flex items-center gap-2">
+                            <span class="version-tag text-slate-500 bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded">RVR60</span>
+                            <span class="text-[9px] opacity-30 uppercase font-bold">Reina-Valera 1960</span>
+                        </div>
+                        <p id="verse-rvr" class="text-lg md:text-xl text-slate-600 dark:text-slate-400 leading-relaxed font-medium italic">
+                            ...
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Acciones -->
+                <div class="flex gap-4 pt-4">
+                    <button onclick="copyVerse()" class="flex-1 bg-slate-900 dark:bg-amber-500 text-white py-4 rounded-2xl font-black text-xs uppercase tracking-widest hover:brightness-110 active:scale-95 transition-all flex items-center justify-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7v8a2 2 0 002 2h6M8 7V5a2 2 0 012-2h4.586a1 1 0 01.707.293l4.414 4.414a1 1 0 01.293.707V15a2 2 0 01-2 2h-2M8 7H6a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2v-2" />
+                        </svg>
+                        Copiar Sabiduría
+                    </button>
+                </div>
+            </div>
+        </main>
+
+        <!-- Reflexión -->
+        <section class="bg-white dark:bg-slate-900 rounded-[2rem] p-6 md:p-8 border border-slate-100 dark:border-slate-800 space-y-4 shadow-sm">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                    <span class="text-amber-500">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                            <path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z" />
+                            <path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4l2 2H4v10h10v-4l2 2v2a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd" />
+                        </svg>
+                    </span>
+                    <h3 class="font-black text-[10px] uppercase tracking-widest opacity-40">Aplicación personal para Nico</h3>
+                </div>
+                <span id="save-indicator" class="text-[9px] font-bold text-green-500 opacity-0 transition-opacity">GUARDADO</span>
+            </div>
+            <textarea id="user-reflection" 
+                class="w-full bg-slate-50 dark:bg-slate-950/50 border-none rounded-2xl p-5 focus:ring-2 focus:ring-amber-400 focus:outline-none min-h-[140px] text-base transition-all"
+                placeholder="Nico, ¿cómo vas a vivir esta palabra hoy?"></textarea>
+        </section>
+
+        <footer class="text-center py-6 opacity-20 text-[9px] font-black uppercase tracking-[0.4em]">
+            Proverbios 31 Capítulos • Nico
+        </footer>
     </div>
 
     <script>
-        const proverbios = [
-            { cita: "Proverbios 3:5", rvr: "Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia.", ntv: "Confía en el Señor con todo tu corazón; no dependas de tu propio entendimiento." },
-            { cita: "Proverbios 16:3", rvr: "Encomienda a Jehová tus obras, y tus pensamientos serán afirmados.", ntv: "Pon todo lo que hagas en manos del Señor, y tus planes tendrán éxito." },
+        const PROVERBIOS = [
+            { cita: "Proverbios 1:7", rvr: "El principio de la sabiduría es el temor de Jehová; los insensatos desprecian la sabiduría y la enseñanza.", ntv: "El temor del Señor es el principio del conocimiento, pero los necios desprecian la sabiduría y la disciplina." },
+            { cita: "Proverbios 3:5-6", rvr: "Fíate de Jehová de todo tu corazón, y no te apoyes en tu propia prudencia. Reconócelo en todos tus caminos, y él enderezará tus veredas.", ntv: "Confía en el Señor con todo tu corazón; no dependas de tu propio entendimiento. Busca su voluntad en todo lo que hagas, y él te mostrará cuál camino tomar." },
+            { cita: "Proverbios 3:27", rvr: "No te niegues a hacer el bien a quien es debido, cuando tuvieres poder para hacerlo.", ntv: "No te niegues a hacer el bien a quien lo necesita, cuando esté en tu mano hacerlo." },
             { cita: "Proverbios 4:23", rvr: "Sobre toda cosa guardada, guarda tu corazón; porque de él mana la vida.", ntv: "Sobre todas las cosas cuida tu corazón, porque este determina el rumbo de tu vida." },
-            { cita: "Proverbios 15:1", rvr: "La blanda respuesta quita la ira; mas la palabra áspera hace subir el furor.", ntv: "La respuesta apacible desvía el enojo, pero las palabras ásperas encienden los ánimos." }
-            // ... (aquí irían los demás)
+            { cita: "Proverbios 10:19", rvr: "En las muchas palabras no falta pecado; mas el que refrena sus labios es prudente.", ntv: "Hablar mucho conduce al pecado; sé prudente y mantén la boca cerrada." },
+            { cita: "Proverbios 11:25", rvr: "El alma generosa será prosperada; y el que saciare, él también será saciado.", ntv: "El generoso prosperará, y el que reanima a otros será reanimado." },
+            { cita: "Proverbios 12:25", rvr: "La congoja en el corazón del hombre lo abate; mas la buena palabra lo alegra.", ntv: "La preocupación agobia a la persona, pero una palabra de aliento la anima." },
+            { cita: "Proverbios 13:20", rvr: "El que anda con sabios, sabio será; mas el que se junta con necios será quebrantado.", ntv: "Camina con sabios y te harás sabio; júntate con necios y te meterás en problemas." },
+            { cita: "Proverbios 15:1", rvr: "La blanda respuesta quita la ira; mas la palabra áspera hace subir el furor.", ntv: "La respuesta apacible desvía el enojo, pero las palabras ásperas encienden los ánimos." },
+            { cita: "Proverbios 16:3", rvr: "Encomienda a Jehová tus obras, y tus pensamientos serán afirmados.", ntv: "Pon todo lo que hagas en manos del Señor, y tus planes tendrán éxito." },
+            { cita: "Proverbios 16:9", rvr: "El corazón del hombre piensa su camino; mas Jehová endereza sus pasos.", ntv: "Podemos hacer nuestros planes, pero el Señor determina nuestros pasos." },
+            { cita: "Proverbios 16:24", rvr: "Panal de miel son las palabras suaves; suavidad al alma y medicina para los huesos.", ntv: "Las palabras amables son como la miel: dulces al alma y sanas para el cuerpo." },
+            { cita: "Proverbios 17:17", rvr: "En todo tiempo ama el amigo, y es como un hermano en tiempo de angustia.", ntv: "Un amigo es siempre leal, y un hermano nace para ayudar en tiempo de necesidad." },
+            { cita: "Proverbios 17:22", rvr: "El corazón alegre constituye buen remedio; mas el espíritu triste seca los huesos.", ntv: "El corazón alegre es una buena medicina, pero el espíritu quebrantado agota las fuerzas." },
+            { cita: "Proverbios 18:10", rvr: "El nombre de Jehová es torre fuerte; a ella corre el justo, y está a salvo.", ntv: "El nombre del Señor es una fortaleza poderosa; los justos corren a él y están a salvo." },
+            { cita: "Proverbios 18:21", rvr: "La muerte y la vida están en poder de la lengua, y el que la ama comerá de sus frutos.", ntv: "La lengua puede traer vida o muerte; los que hablan mucho cosecharán las consecuencias." },
+            { cita: "Proverbios 19:11", rvr: "La cordura del hombre detiene su furor, y su honra es pasar por alto la ofensa.", ntv: "Las personas sensatas dominan su temperamento; se ganan el respeto pasando por alto las ofensas." },
+            { cita: "Proverbios 21:23", rvr: "El que guarda su boca y su lengua, su alma guarda de angustias.", ntv: "Si cuidas tu lengua y tu boca, te ahorrarás muchos problemas." },
+            { cita: "Proverbios 22:1", rvr: "De más estima es el buen nombre que las muchas riquezas, y la buena fama más que la plata y el oro.", ntv: "Vale más tener buen nombre que muchas riquezas; ser estimado es mejor que la plata y el oro." },
+            { cita: "Proverbios 24:16", rvr: "Porque siete veces cae el justo, y vuelve a levantarse; mas los impíos caerán en el mal.", ntv: "Los justos podrán caer siete veces, pero volverán a levantarse. En cambio, basta una sola calamidad para derribar al perverso." },
+            { cita: "Proverbios 27:17", rvr: "Hierro con hierro se aguza; y así el hombre aguza el rostro de su amigo.", ntv: "Como el hierro se afila con el hierro, así un amigo se afila con un amigo." },
+            { cita: "Proverbios 28:13", rvr: "El que encubre sus pecados no prosperará; mas el que los confiesa y se aparta alcanzará misericordia.", ntv: "Los que encubren sus pecados no prosperarán, pero si los confiesan y los abandonan, recibirán misericordia." },
+            { cita: "Proverbios 29:25", rvr: "El temor del hombre pondrá lazo; mas el que confía en Jehová será exaltado.", ntv: "Temer a la gente es una trampa peligrosa, pero confiar en el Señor trae seguridad." },
+            { cita: "Proverbios 31:30", rvr: "Engañosa es la gracia, y vana la hermosura; la mujer que teme a Jehová, esa será alabada.", ntv: "El encanto es engañoso, y la belleza no dura, pero la mujer que teme al Señor será sumamente alabada." }
         ];
+
+        let currentVerse = null;
+
+        function renderVerse(verse) {
+            currentVerse = verse;
+            const main = document.querySelector('main');
+            main.style.opacity = 0;
+            
+            setTimeout(() => {
+                document.getElementById('verse-citation').innerText = verse.cita;
+                document.getElementById('verse-ntv').innerText = `"${verse.ntv}"`;
+                document.getElementById('verse-rvr').innerText = verse.rvr;
+                main.style.opacity = 1;
+            }, 300);
+        }
 
         function init() {
             const now = new Date();
-            const dateKey = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
-            const seed = (now.getDate() * 7) + (now.getMonth() * 31) + now.getFullYear();
-            const item = proverbios[seed % proverbios.length];
+            document.getElementById('current-date').innerText = now.toLocaleDateString('es-AR', { weekday: 'long', day: 'numeric', month: 'long' });
 
-            // Render
-            document.getElementById('fecha-actual').innerText = now.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
-            document.getElementById('texto-rvr').innerText = `"${item.rvr}"`;
-            document.getElementById('cita-rvr').innerText = item.cita;
-            document.getElementById('texto-ntv').innerText = `"${item.ntv}"`;
-            document.getElementById('cita-ntv').innerText = item.cita;
+            // Selección determinística diaria
+            const dayOfYear = Math.floor((now - new Date(now.getFullYear(), 0, 0)) / (1000 * 60 * 60 * 24));
+            const index = dayOfYear % PROVERBIOS.length;
+            renderVerse(PROVERBIOS[index]);
 
-            // Lógica de Reflexión
-            const textArea = document.getElementById('reflexion-user');
-            const savedNote = localStorage.getItem(`nota-${dateKey}`);
-            if (savedNote) textArea.value = savedNote;
-
+            // Reflexión
+            const reflectionKey = `reflexion-${now.getFullYear()}-${dayOfYear}`;
+            const textArea = document.getElementById('user-reflection');
+            const indicator = document.getElementById('save-indicator');
+            
+            textArea.value = localStorage.getItem(reflectionKey) || "";
+            
             textArea.addEventListener('input', (e) => {
-                localStorage.setItem(`nota-${dateKey}`, e.target.value);
+                localStorage.setItem(reflectionKey, e.target.value);
+                indicator.style.opacity = 1;
+                setTimeout(() => indicator.style.opacity = 0, 1000);
             });
+        }
 
-            // Copiar
-            document.getElementById('copyBtn').onclick = () => {
-                const text = `📖 ${item.cita}\n\nRVR1960: ${item.rvr}\nNTV: ${item.ntv}`;
-                navigator.clipboard.writeText(text);
-                alert("¡Copiado para compartir! 🚀");
-            };
+        function refreshVerse() {
+            const randomIndex = Math.floor(Math.random() * PROVERBIOS.length);
+            renderVerse(PROVERBIOS[randomIndex]);
+        }
+
+        function copyVerse() {
+            const text = `📖 ${currentVerse.cita}\n\nNTV: "${currentVerse.ntv}"\n\nRVR60: "${currentVerse.rvr}"`;
+            navigator.clipboard.writeText(text);
+            const msg = document.createElement('div');
+            msg.innerText = "¡Copiado!";
+            msg.className = "fixed bottom-10 left-1/2 -translate-x-1/2 bg-amber-500 text-white px-4 py-2 rounded-full text-xs font-bold shadow-lg animate-bounce";
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 2000);
         }
 
         window.onload = init;
